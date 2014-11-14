@@ -1,0 +1,24 @@
+*.class
+.svn
+.idea
+#.classpath
+#.settings
+#.project
+
+# folder  #
+target
+bin
+obj
+logs
+gen
+
+# Package Files #
+#*.jar
+*.war
+*.ear
+*.log
+#*.dll
+*.exe
+*.suo
+*.iml
+*.user
