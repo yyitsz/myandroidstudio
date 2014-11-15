@@ -2,6 +2,7 @@ package org.yy.geoquiz;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 public class QuizActivity extends ActionBarActivity {
 
+	private static final String INDEX_KEY = "index";
+	
 	private Button trueButton;
 	private Button falseButton;
 	private Button nextButton;
@@ -29,6 +32,7 @@ public class QuizActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(QuizActivity.class.getName(), "onCreate(Bundle) called");
 		setContentView(R.layout.activity_quiz);
 		trueButton = (Button) findViewById(R.id.true_button);
 		trueButton.setOnClickListener(new OnClickListener() {
@@ -70,11 +74,24 @@ public class QuizActivity extends ActionBarActivity {
 		});
 		
 		questionTextView = (TextView) findViewById(R.id.question_text_view);
+		if(savedInstanceState != null) {
+			currentIndex = savedInstanceState.getInt(INDEX_KEY, 0);
+		}
 		showQuestion();
 	}
 
 	private void showQuestion() {
 		questionTextView.setText(questions[currentIndex].getQuestion());
+	}
+
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		Log.d(QuizActivity.class.getName(), "onSaveInstanceState() called");
+		outState.putInt(INDEX_KEY, currentIndex);
+		
 	}
 
 	@Override
@@ -105,4 +122,41 @@ public class QuizActivity extends ActionBarActivity {
 		}
 		Toast.makeText(QuizActivity.this, msg, Toast.LENGTH_SHORT).show();
 	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.d(QuizActivity.class.getName(), "onDestroy() called");
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Log.d(QuizActivity.class.getName(), "onStop() called");
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.d(QuizActivity.class.getName(), "onPause() called");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.d(QuizActivity.class.getName(), "onResume() called");
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Log.d(QuizActivity.class.getName(), "onStart called");
+	}
+	
+	
 }
