@@ -1,6 +1,7 @@
 package org.yy.geoquiz;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,13 +15,17 @@ import android.widget.Toast;
 public class QuizActivity extends ActionBarActivity {
 
 	private static final String INDEX_KEY = "index";
-	
+	public static final String EXTRA_ANSWER_KEY = "org.yy.geoquiz.answer";
+	private static final String CHEATER_KEY = "org.yy.geoquiz.cheater";
 	private Button trueButton;
 	private Button falseButton;
 	private Button nextButton;
 	private Button previousButton;
+	private Button cheatButton;
 	
 	private TextView questionTextView;
+	
+	
 	private TrueFalse[] questions = new TrueFalse[] {
 			new TrueFalse(R.string.question_1, true),
 			new TrueFalse(R.string.question_2, false),
@@ -28,7 +33,7 @@ public class QuizActivity extends ActionBarActivity {
 
 	};
 	private int currentIndex;
-
+	private boolean[] isCheaterArray = new boolean[] {false, false,false} ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,9 +78,22 @@ public class QuizActivity extends ActionBarActivity {
 			}
 		});
 		
+		
+		cheatButton = (Button) findViewById(R.id.cheat_button);
+		cheatButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+				i.putExtra(QuizActivity.EXTRA_ANSWER_KEY, questions[currentIndex].isTrueQuestion());
+				startActivityForResult(i, 0);
+			}
+		});
+		
 		questionTextView = (TextView) findViewById(R.id.question_text_view);
 		if(savedInstanceState != null) {
 			currentIndex = savedInstanceState.getInt(INDEX_KEY, 0);
+			isCheaterArray = savedInstanceState.getBooleanArray(CHEATER_KEY);
 		}
 		showQuestion();
 	}
@@ -91,7 +109,7 @@ public class QuizActivity extends ActionBarActivity {
 		super.onSaveInstanceState(outState);
 		Log.d(QuizActivity.class.getName(), "onSaveInstanceState() called");
 		outState.putInt(INDEX_KEY, currentIndex);
-		
+		outState.putBooleanArray(CHEATER_KEY, isCheaterArray);
 	}
 
 	@Override
@@ -115,12 +133,27 @@ public class QuizActivity extends ActionBarActivity {
 
 	private void checkAnswer(boolean userAnswer) {
 		int msg;
-		if (userAnswer == questions[currentIndex].isTrueQuestion()) {
+		if(isCheaterArray[currentIndex]) {
+			msg = R.string.judgement_toast;
+		}
+		else if (userAnswer == questions[currentIndex].isTrueQuestion()) {
 			msg = R.string.correct_toast;
 		} else {
 			msg = R.string.incorrect_toast;
 		}
 		Toast.makeText(QuizActivity.this, msg, Toast.LENGTH_SHORT).show();
+	}
+
+	
+	
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		if(intent == null) {
+			return;
+		}
+		
+		isCheaterArray[currentIndex] = intent.getBooleanExtra(CheatActivity.ANSWER_SHOWN_RESULT_KEY, false);
 	}
 
 	@Override
