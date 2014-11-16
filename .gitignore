@@ -22,3 +22,5 @@ gen
 *.suo
 *.iml
 *.user
+
+android-support-v4.jar.properties
