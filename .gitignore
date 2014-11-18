@@ -6,11 +6,11 @@
 #.project
 
 # folder  #
-target
-bin
-obj
-logs
-gen
+target/
+bin/
+obj/
+logs/
+gen/
 
 # Package Files #
 #*.jar
