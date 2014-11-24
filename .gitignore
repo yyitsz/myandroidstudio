@@ -1,6 +1,7 @@
 *.class
-.svn
-.idea
+.svn/
+.idea/
+.gradle/
 #.classpath
 #.settings
 #.project
@@ -24,3 +25,5 @@ gen/
 *.user
 
 android-support-v4.jar.properties
+local.properties
+build/
