@@ -15,8 +15,11 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 public class CrimeFragment extends Fragment {
-	private Crime crime;
+    public static final String EXTRA_CRIME_ID = "org.yy.criminalintent.crime_id";
+    private Crime crime;
 	private EditText titleEditText;
 	private Button dateButton;
 	private CheckBox solvedCheckBox;
@@ -24,7 +27,8 @@ public class CrimeFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		crime = new Crime();
+		UUID id = (UUID) getArguments().getSerializable(EXTRA_CRIME_ID);
+        crime = CrimeLab.get(this.getActivity()).getCrime(id);
 	}
 
 	@Override
@@ -32,6 +36,7 @@ public class CrimeFragment extends Fragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_crime, container, false);
 		titleEditText = (EditText) view.findViewById(R.id.crime_title);
+        titleEditText.setText(crime.getTitle());
 		titleEditText.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -70,6 +75,13 @@ public class CrimeFragment extends Fragment {
 		
 		return view;
 	}
-	
+
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_CRIME_ID,crimeId);
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 	
 }

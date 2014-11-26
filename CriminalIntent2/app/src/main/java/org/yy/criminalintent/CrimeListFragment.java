@@ -1,6 +1,7 @@
 package org.yy.criminalintent;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.format.DateFormat;
@@ -24,26 +25,30 @@ public class CrimeListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.crimes_title);
         crimes = CrimeLab.get(getActivity()).getCrimes();
-       // ArrayAdapter<Crime> adapter = new ArrayAdapter<Crime>(getActivity(), android.R.layout.simple_list_item_1, crimes);
+        // ArrayAdapter<Crime> adapter = new ArrayAdapter<Crime>(getActivity(), android.R.layout.simple_list_item_1, crimes);
         CrimeAdapter adapter = new CrimeAdapter(crimes);
         setListAdapter(adapter);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-       //Crime crime = (Crime) getListAdapter().getItem(position);
-        Crime crime = ((CrimeAdapter)getListAdapter()).getItem(position);
-        Log.d(CrimeListFragment.class.getName(),crime.getTitle() + " was clicked.");
+        //Crime crime = (Crime) getListAdapter().getItem(position);
+        Crime crime = ((CrimeAdapter) getListAdapter()).getItem(position);
+       // Log.d(CrimeListFragment.class.getName(), crime.getTitle() + " was clicked.");
+        Intent i = new Intent(getActivity(),CrimeActivity.class);
+        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, crime.getId());
+        startActivity(i);
     }
+
     private class CrimeAdapter extends ArrayAdapter<Crime> {
-        public CrimeAdapter (List<Crime> crimes) {
+        public CrimeAdapter(List<Crime> crimes) {
             super(getActivity(), 0, crimes);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_crime,parent);
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_crime, null);
             }
             Crime c = getItem(position);
             TextView titleView = (TextView) convertView.findViewById(R.id.crime_list_item_titleTextView);
